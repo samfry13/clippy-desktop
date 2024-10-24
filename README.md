@@ -1,7 +1,10 @@
-# Tauri + SvelteKit + TypeScript
+# Clippy Desktop
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+Clip maker
 
-## Recommended IDE Setup
+## TODOS
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+- "Open With" cli arguments, etc
+- Minimum window sizing
+- Auto dark/light mode
+- Windows 10/11 acryllic modes

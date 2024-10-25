@@ -1,13 +1,13 @@
 <script lang="ts">
   import { convertFileSrc } from "@tauri-apps/api/core";
-  import Button from "./components/ui/button/button.svelte";
-  import Play from "lucide-svelte/icons/play";
-  import Pause from "lucide-svelte/icons/pause";
-  import VolumeX from "lucide-svelte/icons/volume-x";
-  import Volume2 from "lucide-svelte/icons/volume-2";
   import Ellipsis from "lucide-svelte/icons/ellipsis";
+  import Pause from "lucide-svelte/icons/pause";
+  import Play from "lucide-svelte/icons/play";
   import Save from "lucide-svelte/icons/save";
-  import Slider from "./components/ui/slider/slider.svelte";
+  import Volume2 from "lucide-svelte/icons/volume-2";
+  import VolumeX from "lucide-svelte/icons/volume-x";
+  import DurationSlider from "./components/DurationSlider.svelte";
+  import Button from "./components/ui/button/button.svelte";
 
   const { file }: { file: string } = $props();
   const assetUrl = convertFileSrc(file);
@@ -15,12 +15,41 @@
   let video: HTMLVideoElement;
 
   let paused = $state(false);
-  const togglePlay = () => (paused ? video.play() : video.pause());
+  const togglePlay = () => {
+    if (currentTime >= endTime) currentTime = startTime;
+    if (endTime - startTime <= 0) return;
+    paused ? video.play() : video.pause();
+  };
+
   let muted = $state(false);
   const toggleMute = () => (muted = !muted);
-  let duration = $state(0);
 
+  let duration = $state(0);
+  let startTime = $state(0);
   let currentTime = $state(0);
+  let endTime = $state(-1);
+
+  $effect(() => {
+    if (duration > 0 && endTime === -1) {
+      endTime = duration;
+      startTime = 0;
+      currentTime = 0;
+    }
+  });
+  $effect(() => {
+    // these are just here to make sure the effect gets triggered
+    // whenever start time or end time changes
+    startTime;
+    endTime;
+    paused = true;
+  });
+
+  const onProgress = () => {
+    if (currentTime >= endTime) {
+      currentTime = endTime;
+      paused = true;
+    }
+  };
 
   const formatTime = (time: number, space = false) => {
     const minutes = Math.floor(time / 60);
@@ -41,6 +70,7 @@
     bind:muted
     bind:duration
     bind:currentTime
+    ontimeupdate={onProgress}
   >
     <source src={assetUrl} />
     Your browser does not support the video tag.
@@ -50,7 +80,7 @@
     <div
       class="text-primary-foreground border border-primary w-fit mx-auto py-1 px-3 rounded-md bg-primary/50"
     >
-      {formatTime(duration, true)}
+      {formatTime(endTime - startTime, true)}
     </div>
 
     <div
@@ -84,13 +114,13 @@
         </Button>
       </div>
 
-      <div class="grow flex gap-6">
+      <div class="grow flex gap-6 items-center">
         <span class="hidden sm:block">{formatTime(currentTime)}</span>
-        <Slider
-          class="flex-1"
-          value={[currentTime]}
-          max={duration}
-          step={0.1}
+        <DurationSlider
+          {duration}
+          bind:startTime
+          bind:endTime
+          bind:currentTime
         />
         <span class="hidden sm:block">{formatTime(duration)}</span>
       </div>

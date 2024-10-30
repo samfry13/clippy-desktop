@@ -51,21 +51,25 @@
   };
 </script>
 
-<div class="w-full h-screen max-h-screen flex flex-col bg-neutral-800">
-  <!-- svelte-ignore a11y_media_has_caption -->
-  <video
-    class="flex-1 py-4"
-    bind:this={video}
-    bind:paused
-    bind:muted
-    bind:duration
-    bind:currentTime
-    ontimeupdate={onProgress}
-    onloadedmetadata={onLoadedMetadata}
+<div class="w-full h-screen flex flex-col bg-neutral-800">
+  <div
+    class="shrink-0 basis-0 grow p-4 min-h-28 flex items-center justify-center"
   >
-    <source src={assetUrl} />
-    Your browser does not support the video tag.
-  </video>
+    <!-- svelte-ignore a11y_media_has_caption -->
+    <video
+      class="max-h-full max-w-full shadow-lg"
+      bind:this={video}
+      bind:paused
+      bind:muted
+      bind:duration
+      bind:currentTime
+      ontimeupdate={onProgress}
+      onloadedmetadata={onLoadedMetadata}
+    >
+      <source src={assetUrl} />
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <div class="p-4 mx-auto w-2/3 max-w-3xl space-y-6 select-none">
     <div

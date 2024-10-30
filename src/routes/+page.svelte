@@ -7,15 +7,18 @@
 
   let file = $state("");
   let outputFile = $state("");
-  let error = $state("");
 </script>
 
 <main>
   {#if file}
     <Video
       {file}
-      onSave={() =>
+      onSave={() => {
+        const newPath = file.split(".");
+        newPath.pop();
+
         save({
+          defaultPath: `${newPath.join(".")} - Clip`,
           title: "Output File",
           filters: [
             {
@@ -32,7 +35,8 @@
           }
 
           outputFile = newFile;
-        })}
+        });
+      }}
     />
   {:else}
     <Dropzone
@@ -50,15 +54,9 @@
         outputFile = "";
       }}
       onError={(reason) => {
-        error = reason;
+        toast.error(`Error: ${reason}`);
         outputFile = "";
       }}
     />
-  {/if}
-
-  {#if error}
-    <div class="h-screen w-screen absolute inset-0">
-      {error}
-    </div>
   {/if}
 </main>

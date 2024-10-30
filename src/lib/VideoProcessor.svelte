@@ -4,6 +4,7 @@
   import { Command, open } from "@tauri-apps/plugin-shell";
   import Progress from "./components/ui/progress/progress.svelte";
   import { sep } from "@tauri-apps/api/path";
+  import { formatTime } from "./utils";
 
   let {
     file,
@@ -87,11 +88,15 @@
   class="bg-background/50 absolute inset-0 w-screen h-screen flex items-center justify-center"
 >
   <div
-    class="flex gap-4 p-4 bg-primary/75 text-primary-foreground rounded-lg border-background border"
+    class="flex gap-4 p-4 bg-primary/75 text-primary-foreground rounded-lg border-background border w-3/4 sm:w-1/2"
   >
     {#if progress !== null}
-      <div class="w-28">
+      <div class="w-full flex flex-col gap-2">
         <Progress value={progress} />
+        <div class="flex justify-between">
+          <span>Time Left:</span>
+          <span>{eta ? formatTime(eta) : "--:--:--"}</span>
+        </div>
       </div>
     {/if}
   </div>

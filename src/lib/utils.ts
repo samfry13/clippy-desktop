@@ -69,3 +69,5 @@ export const formatTime = (time: number, space = false) => {
     .map((value) => value.toString().padStart(2, "0"))
     .join(space ? " : " : ":");
 };
+
+export type ValueOf<T> = T[keyof T];

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatTime } from "$lib/utils";
+  import { videoOptions } from "$lib/VideoOptionsStore.svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import Pause from "lucide-svelte/icons/pause";
@@ -6,11 +8,9 @@
   import Save from "lucide-svelte/icons/save";
   import Volume2 from "lucide-svelte/icons/volume-2";
   import VolumeX from "lucide-svelte/icons/volume-x";
-  import DurationSlider from "./components/DurationSlider.svelte";
-  import Button, { buttonVariants } from "./components/ui/button/button.svelte";
-  import { videoOptions } from "./VideoOptionsStore.svelte";
-  import { formatTime } from "./utils";
-  import * as Popover from "./components/ui/popover";
+  import DurationSlider from "./DurationSlider.svelte";
+  import Button, { buttonVariants } from "./ui/button/button.svelte";
+  import * as Popover from "./ui/popover";
   import VideoOptions from "./VideoOptions.svelte";
 
   const { file, onSave }: { file: string; onSave: () => void } = $props();
@@ -129,7 +129,7 @@
           >
             <Ellipsis class="size-5" />
           </Popover.Trigger>
-          <Popover.Content><VideoOptions /></Popover.Content>
+          <Popover.Content class="w-fit"><VideoOptions /></Popover.Content>
         </Popover.Root>
         <Button variant="ghost" size="icon" onclick={onSave}>
           <Save class="size-5" />

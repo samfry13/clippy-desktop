@@ -1,7 +1,9 @@
 <script lang="ts">
-  import Dropzone from "$lib/Dropzone.svelte";
-  import Video from "$lib/Video.svelte";
-  import VideoProcessor from "$lib/VideoProcessor.svelte";
+  import Dropzone from "$lib/components/Dropzone.svelte";
+  import Video from "$lib/components/Video.svelte";
+  import VideoProcessor from "$lib/components/VideoProcessor.svelte";
+  import { VideoType } from "$lib/constants";
+  import { videoOptions } from "$lib/VideoOptionsStore.svelte";
   import { invoke } from "@tauri-apps/api/core";
   import { getMatches } from "@tauri-apps/plugin-cli";
   import { save } from "@tauri-apps/plugin-dialog";
@@ -35,10 +37,15 @@
           defaultPath: `${newPath.join(".")} - Clip`,
           title: "Output File",
           filters: [
-            {
-              name: "Video",
-              extensions: ["mp4", "avi", "mov", "mkv", "flv"],
-            },
+            videoOptions.config.type === VideoType.Gif
+              ? {
+                  name: "GIF",
+                  extensions: ["gif"],
+                }
+              : {
+                  name: "Video",
+                  extensions: ["mp4", "avi", "mov", "mkv", "flv"],
+                },
           ],
         }).then((newFile) => {
           if (!newFile) {

@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { cn } from "$lib/utils";
   import { getCurrentWebview } from "@tauri-apps/api/webview";
+  import { open } from "@tauri-apps/plugin-dialog";
   import Upload from "lucide-svelte/icons/upload";
   import { onDestroy } from "svelte";
-  import Button from "./components/ui/button/button.svelte";
-  import { cn } from "./utils";
-  import { open } from "@tauri-apps/plugin-dialog";
+  import Button from "./ui/button/button.svelte";
 
   let { selectFile }: { selectFile: (file: string) => void } = $props();
 

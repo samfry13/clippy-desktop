@@ -1,10 +1,22 @@
+import { VideoFrameRate, VideoResolution, VideoType } from "./constants";
+
 class VideoOptions {
   startTime = $state(0);
   endTime = $state(-1);
 
-  config = $state({
-    resolution: "Original",
-    frameRate: "Original",
+  config = $state<{
+    type: VideoType;
+    resolution: VideoResolution;
+    frameRate: VideoFrameRate;
+    quality: number;
+    loop: boolean;
+    openFolder: boolean;
+  }>({
+    type: VideoType.Video,
+    resolution: VideoResolution.Original,
+    frameRate: VideoFrameRate.Original,
+    quality: 3,
+    loop: true,
     openFolder: false,
   });
 

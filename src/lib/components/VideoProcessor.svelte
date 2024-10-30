@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { videoOptions } from "./VideoOptionsStore.svelte";
-  import { Command, open } from "@tauri-apps/plugin-shell";
-  import Progress from "./components/ui/progress/progress.svelte";
+  import { formatTime } from "$lib/utils";
+  import { videoOptions } from "$lib/VideoOptionsStore.svelte";
   import { sep } from "@tauri-apps/api/path";
-  import { formatTime } from "./utils";
+  import { Command, open } from "@tauri-apps/plugin-shell";
+  import { onMount } from "svelte";
+  import Progress from "./ui/progress/progress.svelte";
+  import { VideoFrameRate, VideoResolution, VideoType } from "$lib/constants";
 
   let {
     file,
@@ -23,21 +24,25 @@
 
   onMount(() => {
     const filters: string[] = [];
-    if (videoOptions.config.resolution === "1080")
+    if (videoOptions.config.resolution !== VideoResolution.Original)
       filters.push(
-        "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease"
-      );
-    else if (videoOptions.config.resolution === "720")
-      filters.push(
-        "scale='min(1280,iw)':'min(720,ih)':force_original_aspect_ratio=decrease"
-      );
-    else if (videoOptions.config.resolution === "480")
-      filters.push(
-        "scale='min(864,iw)':'min(486,ih)':force_original_aspect_ratio=decrease"
+        {
+          [VideoResolution[1080]]:
+            "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease",
+          [VideoResolution[720]]:
+            "scale='min(1280,iw)':'min(720,ih)':force_original_aspect_ratio=decrease",
+          [VideoResolution[480]]:
+            "scale='min(864,iw)':'min(486,ih)':force_original_aspect_ratio=decrease",
+        }[videoOptions.config.resolution]
       );
 
-    if (videoOptions.config.frameRate !== "Original")
+    if (videoOptions.config.frameRate !== VideoFrameRate.Original)
       filters.push(`fps=${videoOptions.config.frameRate}`);
+
+    if (videoOptions.config.type === VideoType.Gif)
+      filters.push(
+        `split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse`
+      );
 
     const args = [
       "-y",
@@ -49,6 +54,18 @@
       "-to",
       videoOptions.endTime.toString(),
       ...(filters.length > 0 ? ["-filter:v", filters.join(",")] : []),
+      ...(videoOptions.config.type === VideoType.Gif
+        ? videoOptions.config.loop
+          ? ["-loop", "0"]
+          : ["-loop", "-1"]
+        : []),
+      // this changes the bitrate. Higher number = lower quality
+      // so if the input's value is low, the number will be high,
+      // and the quality will be lower
+      // Current range -> 19 - 24
+      ...(videoOptions.config.quality < 6
+        ? ["-crf", `${24 - videoOptions.config.quality}`]
+        : []),
       outputFile,
     ];
     console.log(`command args: ffmpeg ${args.join(" ")}`);

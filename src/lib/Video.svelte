@@ -8,16 +8,19 @@
   import VolumeX from "lucide-svelte/icons/volume-x";
   import DurationSlider from "./components/DurationSlider.svelte";
   import Button from "./components/ui/button/button.svelte";
+  import { videoOptions } from "./VideoOptions.svelte";
+  import { formatTime } from "./utils";
 
-  const { file }: { file: string } = $props();
+  const { file, onSave }: { file: string; onSave: () => void } = $props();
   const assetUrl = convertFileSrc(file);
 
   let video: HTMLVideoElement;
 
   let paused = $state(false);
   const togglePlay = () => {
-    if (currentTime >= endTime) currentTime = startTime;
-    if (endTime - startTime <= 0) return;
+    if (currentTime >= videoOptions.endTime)
+      currentTime = videoOptions.startTime;
+    if (videoOptions.endTime - videoOptions.startTime <= 0) return;
     paused ? video.play() : video.pause();
   };
 
@@ -25,39 +28,26 @@
   const toggleMute = () => (muted = !muted);
 
   let duration = $state(0);
-  let startTime = $state(0);
   let currentTime = $state(0);
-  let endTime = $state(-1);
 
-  $effect(() => {
-    if (duration > 0 && endTime === -1) {
-      endTime = duration;
-      startTime = 0;
-      currentTime = 0;
-    }
-  });
   $effect(() => {
     // these are just here to make sure the effect gets triggered
     // whenever start time or end time changes
-    startTime;
-    endTime;
+    videoOptions.startTime;
+    videoOptions.endTime;
     paused = true;
   });
 
   const onProgress = () => {
-    if (currentTime >= endTime) {
-      currentTime = endTime;
+    if (currentTime >= videoOptions.endTime) {
+      currentTime = videoOptions.endTime;
       paused = true;
     }
   };
-
-  const formatTime = (time: number, space = false) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    const millis = Math.floor((time % 1) * 100);
-    return [minutes, seconds, millis]
-      .map((value) => value.toString().padStart(2, "0"))
-      .join(space ? " : " : ":");
+  const onLoadedMetadata = () => {
+    videoOptions.endTime = duration;
+    videoOptions.startTime = 0;
+    currentTime = 0;
   };
 </script>
 
@@ -71,6 +61,7 @@
     bind:duration
     bind:currentTime
     ontimeupdate={onProgress}
+    onloadedmetadata={onLoadedMetadata}
   >
     <source src={assetUrl} />
     Your browser does not support the video tag.
@@ -80,7 +71,7 @@
     <div
       class="text-primary-foreground border border-primary w-fit mx-auto py-1 px-3 rounded-md bg-primary/50"
     >
-      {formatTime(endTime - startTime, true)}
+      {formatTime(videoOptions.endTime - videoOptions.startTime, true)}
     </div>
 
     <div
@@ -118,8 +109,8 @@
         <span class="hidden sm:block">{formatTime(currentTime)}</span>
         <DurationSlider
           {duration}
-          bind:startTime
-          bind:endTime
+          bind:startTime={videoOptions.startTime}
+          bind:endTime={videoOptions.endTime}
           bind:currentTime
         />
         <span class="hidden sm:block">{formatTime(duration)}</span>
@@ -127,7 +118,9 @@
 
       <div class="shrink-0 flex gap-1">
         <Button variant="ghost" size="icon"><Ellipsis class="size-5" /></Button>
-        <Button variant="ghost" size="icon"><Save class="size-5" /></Button>
+        <Button variant="ghost" size="icon" onclick={onSave}
+          ><Save class="size-5" /></Button
+        >
       </div>
     </div>
   </div>

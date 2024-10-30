@@ -1,1 +1,9 @@
-<script>import "../app.css";</script><slot></slot>
+<script>
+  import { Toaster } from "$lib/components/ui/sonner";
+  import "../app.css";
+  let { children } = $props();
+</script>
+
+<Toaster position="top-right" />
+
+{@render children?.()}

@@ -93,10 +93,14 @@
     {#if progress !== null}
       <div class="w-full flex flex-col gap-2">
         <Progress value={progress} />
-        <div class="flex justify-between">
-          <span>Time Left:</span>
-          <span>{eta ? formatTime(eta) : "--:--:--"}</span>
-        </div>
+        {#if eta}
+          <div class="flex justify-between">
+            <span>Time Left:</span>
+            <span>{eta ? formatTime(eta) : "--:--:--"}</span>
+          </div>
+        {:else}
+          <span>Starting up...</span>
+        {/if}
       </div>
     {/if}
   </div>

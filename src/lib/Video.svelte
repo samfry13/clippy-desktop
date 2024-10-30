@@ -7,9 +7,11 @@
   import Volume2 from "lucide-svelte/icons/volume-2";
   import VolumeX from "lucide-svelte/icons/volume-x";
   import DurationSlider from "./components/DurationSlider.svelte";
-  import Button from "./components/ui/button/button.svelte";
-  import { videoOptions } from "./VideoOptions.svelte";
+  import Button, { buttonVariants } from "./components/ui/button/button.svelte";
+  import { videoOptions } from "./VideoOptionsStore.svelte";
   import { formatTime } from "./utils";
+  import * as Popover from "./components/ui/popover";
+  import VideoOptions from "./VideoOptions.svelte";
 
   const { file, onSave }: { file: string; onSave: () => void } = $props();
   const assetUrl = convertFileSrc(file);
@@ -121,10 +123,17 @@
       </div>
 
       <div class="shrink-0 flex gap-1">
-        <Button variant="ghost" size="icon"><Ellipsis class="size-5" /></Button>
-        <Button variant="ghost" size="icon" onclick={onSave}
-          ><Save class="size-5" /></Button
-        >
+        <Popover.Root>
+          <Popover.Trigger
+            class={buttonVariants({ variant: "ghost", size: "icon" })}
+          >
+            <Ellipsis class="size-5" />
+          </Popover.Trigger>
+          <Popover.Content><VideoOptions /></Popover.Content>
+        </Popover.Root>
+        <Button variant="ghost" size="icon" onclick={onSave}>
+          <Save class="size-5" />
+        </Button>
       </div>
     </div>
   </div>

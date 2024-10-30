@@ -23,9 +23,6 @@ importers:
       '@tauri-apps/plugin-shell':
         specifier: ^2
         version: 2.0.1
-      lucide-svelte:
-        specifier: ^0.453.0
-        version: 0.453.0(svelte@5.1.0)
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.5
@@ -48,6 +45,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      lucide-svelte:
+        specifier: ^0.453.0
+        version: 0.453.0(svelte@5.1.0)
       mode-watcher:
         specifier: ^0.4.1
         version: 0.4.1(svelte@5.1.0)

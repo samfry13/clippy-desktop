@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { videoOptions } from "./VideoOptions.svelte";
+  import { videoOptions } from "./VideoOptionsStore.svelte";
   import { Command, open } from "@tauri-apps/plugin-shell";
   import Progress from "./components/ui/progress/progress.svelte";
   import { sep } from "@tauri-apps/api/path";
@@ -22,7 +22,24 @@
   let eta = $state<number | null>(null);
 
   onMount(() => {
-    const command = Command.sidecar("binaries/ffmpeg", [
+    const filters: string[] = [];
+    if (videoOptions.config.resolution === "1080")
+      filters.push(
+        "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease"
+      );
+    else if (videoOptions.config.resolution === "720")
+      filters.push(
+        "scale='min(1280,iw)':'min(720,ih)':force_original_aspect_ratio=decrease"
+      );
+    else if (videoOptions.config.resolution === "480")
+      filters.push(
+        "scale='min(864,iw)':'min(486,ih)':force_original_aspect_ratio=decrease"
+      );
+
+    if (videoOptions.config.frameRate !== "Original")
+      filters.push(`fps=${videoOptions.config.frameRate}`);
+
+    const args = [
       "-y",
       "-nostdin",
       "-i",
@@ -31,18 +48,23 @@
       videoOptions.startTime.toString(),
       "-to",
       videoOptions.endTime.toString(),
-      "-filter:v",
-      "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease",
+      ...(filters.length > 0 ? ["-filter:v", filters.join(",")] : []),
       outputFile,
-    ]);
+    ];
+    console.log(`command args: ffmpeg ${args.join(" ")}`);
+
+    const command = Command.sidecar("binaries/ffmpeg", args);
+
     command.on("close", (data) => {
       console.log(
         `command finished with code ${data.code} and signal ${data.signal}`
       );
 
       if (data.code === 0) {
-        const outputFolder = outputFile.split(sep()).slice(0, -1).join(sep());
-        open(outputFolder);
+        if (videoOptions.config.openFolder) {
+          const outputFolder = outputFile.split(sep()).slice(0, -1).join(sep());
+          open(outputFolder);
+        }
 
         onComplete();
       } else {

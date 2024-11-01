@@ -1,7 +1,7 @@
 {
   "name": "clippy-desktop",
   "version": "0.1.0",
-  "description": "",
+  "description": "Clip maker",
   "type": "module",
   "scripts": {
     "dev": "vite dev",

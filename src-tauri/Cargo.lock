@@ -580,6 +580,7 @@ dependencies = [
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
  "tauri-plugin-shell",
+ "window-vibrancy",
 ]
 
 [[package]]

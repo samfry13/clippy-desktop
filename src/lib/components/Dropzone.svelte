@@ -39,7 +39,7 @@
 <div class="w-full h-screen flex items-center justify-center">
   <div
     class={cn(
-      "w-full max-w-md p-8 text-center border-2 border-dashed rounded-lg transition-colors duration-300 ease-in-out",
+      "w-full max-w-md p-8 text-center border-2 border-dashed rounded-lg transition-colors duration-300 ease-in-out shadow-lg",
       dragging && !error
         ? "border-primary bg-primary/10"
         : "border-ring bg-background",

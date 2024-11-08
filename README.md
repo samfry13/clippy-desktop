@@ -4,7 +4,6 @@ Clip maker
 
 ## TODOS
 
-- Windows 10/11 acryllic modes
 - Shortcuts
   - (CTRL + O) - Open File
   - (CTRL + S) - Clip current File

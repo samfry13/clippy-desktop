@@ -22,3 +22,5 @@ export const VideoFrameRate = {
   15: "15",
 } as const;
 export type VideoFrameRate = ValueOf<typeof VideoFrameRate>;
+
+export const CONFIG_STORAGE_KEY = "config";

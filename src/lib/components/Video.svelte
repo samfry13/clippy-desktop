@@ -12,6 +12,13 @@
   import Button, { buttonVariants } from "./ui/button/button.svelte";
   import * as Popover from "./ui/popover";
   import VideoOptions from "./VideoOptions.svelte";
+  import { onMount } from "svelte";
+  import {
+    CONFIG_STORAGE_KEY,
+    VideoFrameRate,
+    VideoResolution,
+    VideoType,
+  } from "$lib/constants";
 
   const { file, onSave }: { file: string; onSave: () => void } = $props();
   const assetUrl = convertFileSrc(file);
@@ -51,6 +58,51 @@
     videoOptions.startTime = 0;
     currentTime = 0;
   };
+
+  onMount(() => {
+    const savedConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
+    if (!savedConfig) return;
+
+    try {
+      const parsedConfig = JSON.parse(savedConfig);
+      if (typeof parsedConfig !== "object") return;
+
+      if (
+        typeof parsedConfig.type === "string" &&
+        Object.keys(VideoType).includes(parsedConfig.type)
+      )
+        videoOptions.config.type = parsedConfig.type;
+      if (
+        typeof parsedConfig.resolution === "string" &&
+        Object.keys(VideoResolution).includes(parsedConfig.resolution)
+      )
+        videoOptions.config.resolution = parsedConfig.resolution;
+      if (
+        typeof parsedConfig.frameRate === "string" &&
+        Object.keys(VideoFrameRate).includes(parsedConfig.frameRate)
+      )
+        videoOptions.config.frameRate = parsedConfig.frameRate;
+      if (
+        typeof parsedConfig.quality === "number" &&
+        parsedConfig.quality <= 6 &&
+        parsedConfig.quality >= 0
+      )
+        videoOptions.config.quality = parsedConfig.quality;
+      if (typeof parsedConfig.loop === "boolean")
+        videoOptions.config.loop = parsedConfig.loop;
+      if (typeof parsedConfig.openFolder === "boolean")
+        videoOptions.config.openFolder = parsedConfig.openFolder;
+    } catch (e) {
+      console.error(`Error parsing config: ${e}`);
+    }
+  });
+
+  $effect(() => {
+    localStorage.setItem(
+      CONFIG_STORAGE_KEY,
+      JSON.stringify(videoOptions.config)
+    );
+  });
 </script>
 
 <div class="w-full h-screen flex flex-col bg-neutral-800">

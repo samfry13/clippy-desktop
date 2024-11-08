@@ -42,7 +42,7 @@
       "w-full max-w-md p-8 text-center border-2 border-dashed rounded-lg transition-colors duration-300 ease-in-out shadow-lg",
       dragging && !error
         ? "border-primary bg-primary/10"
-        : "border-ring bg-background",
+        : "border-ring bg-background/20",
       error && "border-destructive bg-destructive/50"
     )}
   >

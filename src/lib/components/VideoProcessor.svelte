@@ -124,10 +124,10 @@
 </script>
 
 <div
-  class="bg-background/50 absolute inset-0 w-screen h-screen flex items-center justify-center"
+  class="bg-background/50 backdrop-blur-sm absolute inset-0 w-screen h-screen flex items-center justify-center"
 >
   <div
-    class="flex gap-4 p-4 bg-primary/75 text-primary-foreground rounded-lg border-background border w-3/4 sm:w-1/2"
+    class="flex gap-4 p-4 bg-primary/75 backdrop-blur-sm text-primary-foreground rounded-lg border-background border w-3/4 sm:w-1/2"
   >
     {#if progress !== null}
       <div class="w-full flex flex-col gap-2">

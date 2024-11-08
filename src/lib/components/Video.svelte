@@ -105,6 +105,19 @@
   });
 </script>
 
+<svelte:window
+  onkeydown={(e) => {
+    if (e.altKey || e.ctrlKey || e.shiftKey) return;
+
+    if (e.key === " " || e.key === "k") {
+      togglePlay();
+    }
+    if (e.key === "m") {
+      toggleMute();
+    }
+  }}
+/>
+
 <div class="w-full h-screen flex flex-col">
   <div
     class="shrink-0 basis-0 grow p-4 min-h-28 flex items-center justify-center"

@@ -5,12 +5,14 @@
     startTime = $bindable(0),
     currentTime = $bindable(0),
     endTime = $bindable(duration),
+    step = 0.01,
   }: {
     duration: number;
     gap?: number;
     startTime?: number;
     currentTime?: number;
     endTime?: number;
+    step?: number;
   } = $props();
 
   let startInput: HTMLInputElement;
@@ -60,6 +62,75 @@
   };
 </script>
 
+<svelte:window
+  onkeydown={(e) => {
+    if (e.altKey) return;
+
+    // Start keybinds
+    // CTRL + ArrowLeft/ArrowRight - move start by one step
+    if (e.ctrlKey && !e.shiftKey && e.key === "ArrowLeft") {
+      startInput.value = (parseFloat(startInput.value) - step).toString();
+      onStartInput();
+    }
+    if (e.ctrlKey && !e.shiftKey && e.key === "ArrowRight") {
+      startInput.value = (parseFloat(startInput.value) + step).toString();
+      onStartInput();
+    }
+    if (e.ctrlKey && !e.shiftKey && e.key === " ") {
+      startInput.value = currentInput.value;
+      onStartInput();
+    }
+
+    // End keybinds
+    // ALT + ArrowLeft/Right - move end by one step
+    if (!e.ctrlKey && e.shiftKey && e.key === "ArrowLeft") {
+      endInput.value = (parseFloat(endInput.value) - step).toString();
+      onEndInput();
+    }
+    if (!e.ctrlKey && e.shiftKey && e.key === "ArrowRight") {
+      endInput.value = (parseFloat(endInput.value) + step).toString();
+      onEndInput();
+    }
+    if (!e.ctrlKey && e.shiftKey && e.key === " ") {
+      endInput.value = currentInput.value;
+      onEndInput();
+    }
+
+    if (e.ctrlKey || e.shiftKey) return;
+
+    // Seek keybinds
+    // ArrowLeft/ArrowRight - seek by 5 sec
+    if (e.key === "ArrowLeft") {
+      currentInput.value = (parseFloat(currentInput.value) - 5).toString();
+      onCurrentInput();
+    }
+    if (e.key === "ArrowRight") {
+      currentInput.value = (parseFloat(currentInput.value) + 5).toString();
+      onCurrentInput();
+    }
+
+    // comma/period - seek by step
+    if (e.key === ",") {
+      currentInput.value = (parseFloat(currentInput.value) - step).toString();
+      onCurrentInput();
+    }
+    if (e.key === ".") {
+      currentInput.value = (parseFloat(currentInput.value) + step).toString();
+      onCurrentInput();
+    }
+
+    // j/l - seek by 10 sec
+    if (e.key === "j") {
+      currentInput.value = (parseFloat(currentInput.value) - 10).toString();
+      onCurrentInput();
+    }
+    if (e.key === "l") {
+      currentInput.value = (parseFloat(currentInput.value) + 10).toString();
+      onCurrentInput();
+    }
+  }}
+/>
+
 <div class="slider-container">
   <div
     class="slider-track"
@@ -74,7 +145,7 @@
     class="current-input"
     max={duration}
     min={0}
-    step={0.01}
+    {step}
     value={currentTime}
     oninput={onCurrentInput}
   />
@@ -85,7 +156,7 @@
     class="start-input"
     max={duration}
     min={0}
-    step={0.01}
+    {step}
     value={startTime}
     oninput={onStartInput}
   />
@@ -95,7 +166,7 @@
     class="end-input"
     max={duration}
     min={0}
-    step={0.01}
+    {step}
     value={endTime}
     oninput={onEndInput}
   />

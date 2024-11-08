@@ -132,10 +132,10 @@
     border-radius: 5px;
     background: linear-gradient(
       to right,
-      #6d6d6d calc(var(--start-time) - 0.5rem),
-      #a6a5a1 calc(var(--start-time) - 0.5rem),
-      #a6a5a1 calc(var(--end-time) + 0.5rem),
-      #6d6d6d calc(var(--end-time) + 0.5rem)
+      hsl(var(--primary) / 0.2) calc(var(--start-time) - 0.5rem),
+      hsl(var(--primary) / 0.7) calc(var(--start-time) - 0.5rem),
+      hsl(var(--primary) / 0.7) calc(var(--end-time) + 0.5rem),
+      hsl(var(--primary) / 0.2) calc(var(--end-time) + 0.5rem)
     );
   }
 
@@ -157,8 +157,8 @@
     -webkit-appearance: none;
     height: 1.5rem;
     width: 1rem;
-    border: #a6a5a1 7px solid;
-    background-color: #33332f;
+    border: hsl(var(--primary)) 7px solid;
+    background-color: hsl(var(--border));
     cursor: pointer;
     margin-top: -9px;
     pointer-events: auto;
@@ -178,7 +178,7 @@
     position: absolute;
     width: 2px;
     height: 25px;
-    background: #a6a5a1;
+    background: hsl(var(--primary) / 0.7);
     top: anchor(--current-thumb bottom);
     left: anchor(--current-thumb center);
     margin-left: -1px;
@@ -188,8 +188,8 @@
     -webkit-appearance: none;
     height: 1rem;
     width: 1rem;
-    background-color: #a6a5a1;
-    border: #2d2d2d 3px solid;
+    background-color: hsl(var(--primary) / 0.7);
+    border: hsl(var(--border)) 3px solid;
     cursor: pointer;
     margin-top: -40px;
     pointer-events: auto;
@@ -197,6 +197,6 @@
     anchor-name: --current-thumb;
   }
   .current-input::-webkit-slider-thumb:hover {
-    border: #2d2d2d 1px solid;
+    border: hsl(var(--border)) 1px solid;
   }
 </style>

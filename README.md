@@ -4,7 +4,6 @@ Clip maker
 
 ## TODOS
 
-- Proper dark/light mode
 - Windows 10/11 acryllic modes
 - Shortcuts
   - (CTRL + O) - Open File

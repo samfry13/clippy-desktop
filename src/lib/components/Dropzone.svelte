@@ -36,17 +36,17 @@
   });
 </script>
 
-<div class="w-full h-screen flex items-center justify-center bg-white">
+<div class="w-full h-screen flex items-center justify-center">
   <div
     class={cn(
       "w-full max-w-md p-8 text-center border-2 border-dashed rounded-lg transition-colors duration-300 ease-in-out",
       dragging && !error
         ? "border-primary bg-primary/10"
-        : "border-gray-300 bg-white",
-      error && "border-red-700 bg-red-100"
+        : "border-ring bg-background",
+      error && "border-destructive bg-destructive/50"
     )}
   >
-    <Upload class="mx-auto text-gray-400 w-12 h-12 mb-4" />
+    <Upload class="mx-auto text-secondary-foreground w-12 h-12 mb-4" />
     <h2 class="text-xl font-semibold mb-2">
       {#if error}
         {error}
@@ -54,7 +54,7 @@
         Drop your video here
       {/if}
     </h2>
-    <p class="text-sm text-gray-500 mb-4">or click to select files</p>
+    <p class="text-sm text-muted-foreground mb-4">or click to select files</p>
     <input type="file" id="fileInput" class="sr-only" />
     <label for="fileInput">
       <Button

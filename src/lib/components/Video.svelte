@@ -1,4 +1,10 @@
 <script lang="ts">
+  import {
+    CONFIG_STORAGE_KEY,
+    VideoFrameRate,
+    VideoResolution,
+    VideoType,
+  } from "$lib/constants";
   import { formatTime } from "$lib/utils";
   import { videoOptions } from "$lib/VideoOptionsStore.svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
@@ -8,17 +14,11 @@
   import Save from "lucide-svelte/icons/save";
   import Volume2 from "lucide-svelte/icons/volume-2";
   import VolumeX from "lucide-svelte/icons/volume-x";
+  import { onMount } from "svelte";
   import DurationSlider from "./DurationSlider.svelte";
   import Button, { buttonVariants } from "./ui/button/button.svelte";
   import * as Popover from "./ui/popover";
   import VideoOptions from "./VideoOptions.svelte";
-  import { onMount } from "svelte";
-  import {
-    CONFIG_STORAGE_KEY,
-    VideoFrameRate,
-    VideoResolution,
-    VideoType,
-  } from "$lib/constants";
 
   const { file, onSave }: { file: string; onSave: () => void } = $props();
   const assetUrl = convertFileSrc(file);
@@ -105,7 +105,7 @@
   });
 </script>
 
-<div class="w-full h-screen flex flex-col bg-neutral-800">
+<div class="w-full h-screen flex flex-col">
   <div
     class="shrink-0 basis-0 grow p-4 min-h-28 flex items-center justify-center"
   >
@@ -127,13 +127,13 @@
 
   <div class="p-4 mx-auto w-2/3 max-w-3xl space-y-6 select-none">
     <div
-      class="text-primary-foreground border border-primary w-fit mx-auto py-1 px-3 rounded-md bg-primary/50"
+      class="text-secondary-foreground border border-secondary w-fit mx-auto py-1 px-3 rounded-md bg-secondary/50"
     >
       {formatTime(videoOptions.endTime - videoOptions.startTime, true)}
     </div>
 
     <div
-      class="flex items-center gap-4 sm:gap-2 mb-2 text-primary-foreground text-sm w-full justify-center border border-primary p-1 rounded-md bg-primary/50"
+      class="flex items-center gap-4 sm:gap-2 mb-2 text-secondary-foreground text-sm w-full justify-center border border-secondary p-1 rounded-md bg-secondary/50"
     >
       <div class="shrink-0 flex gap-1">
         <Button

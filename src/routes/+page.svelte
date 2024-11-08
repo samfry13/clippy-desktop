@@ -5,8 +5,10 @@
   import { VideoType } from "$lib/constants";
   import { videoOptions } from "$lib/VideoOptionsStore.svelte";
   import { invoke } from "@tauri-apps/api/core";
+  import { getCurrentWindow } from "@tauri-apps/api/window";
   import { getMatches } from "@tauri-apps/plugin-cli";
   import { save } from "@tauri-apps/plugin-dialog";
+  import { setMode } from "mode-watcher";
   import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
 
@@ -22,6 +24,10 @@
         });
       }
     });
+
+    const currentWindow = getCurrentWindow();
+    currentWindow.theme().then((theme) => setMode(theme ?? "system"));
+    currentWindow.onThemeChanged(({ payload: theme }) => setMode(theme));
   });
 </script>
 
